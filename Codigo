@@ -69,10 +69,10 @@ while True:
 
 
         print(f'{"="*60}')
-        print("**  REGISTRO DE NUEVO EJEMPLEAR   **")
+        print("\t\tREGISTRO DE NUEVO EJEMPLEAR")
         TITULO=input("Ingrese el titulo: ").upper()
-        AUTOR=input(f"Indique el autor de {TITULO}: ").upper()
-        GENERO=input(f"Indique el genero de {TITULO}: ").upper()
+        AUTOR=input(f"Indique el autor de, {TITULO}: ").upper()
+        GENERO=input(f"Indique el genero de, {TITULO}: ").upper()
         ANIO_PUBLICACION=int(input(f"Indique el año de publicación de {TITULO}: "))
         ISBN=input(f"Indique el ISBN de {TITULO}: ")
         FECHA_ADQUISICION=input(f"Indique la fecha de adquisición de {TITULO}: ")
@@ -113,13 +113,13 @@ while True:
     if opcion==2:
         while True:
             print(f'{"="*60}')
-            print("**      CONSULTAS Y REPORTES      **")
-            opcion_2=int(input("[1]Consulta de titulo\n[2]Reportes\n[3]Volver al menu de consultas y reportes\nElija una opcion:"))
+            print("\t\t CONSULTAS Y REPORTES")
+            opcion_2=int(input("[1] Consulta de titulo\n[2] Reportes\n[3] Volver al menu de consultas y reportes\nElija una opcion:"))
 
             if opcion_2==1:
                 while True:
                     print(f'{"="*70}')
-                    opcion2_1=int(input("[1]Por titulo\n[2]Por ISBN\n[3]Volver al menu de consultas y reportes\nElija una opcion: "))
+                    opcion2_1=int(input("[1] Por titulo\n[2] Por ISBN\n[3] Volver al menu de consultas y reportes\nElija una opcion: "))
                     print(f'{"="*70}')
                     if opcion2_1==1:
                         conn=sqlite3.connect('biblioteca.db')
@@ -187,7 +187,7 @@ while True:
                         datos=pd.DataFrame(informacion,columns=['ID','TITULO','AUTOR','GENERO','ANIO_PUBLICACION','ISBN','FECHA_ADQUISICION','ID_GENERO','ID_AUTOR'])
                         print(datos)
                         print(f'{"="*60}')
-                        opcion2_2_1=int(input("[1]Exportar reporte en formato CSV\n[2]Exportar reporte en formato MsExcel\n[3]No exportar nada\n Elija una opcion:"))
+                        opcion2_2_1=int(input("\n[1] Exportar reporte en formato CSV\n[2] Exportar reporte en formato MsExcel\n[3] No exportar\n Elija una opcion:"))
                         if opcion2_2_1==1:
                             datos.to_csv('Catalago_completo.csv', index=False)
                             print('El archivo csv se nombro Catalago_completo.csv')
@@ -223,7 +223,7 @@ while True:
                             print(consulta)
                         
                         
-                        opcion2_2_2=int(input("[1]Exportar reporte en formato CSV\n[2]Exportar reporte en formato MsExcel\n[3]No exportar nada\n Elija una opcion:"))
+                        opcion2_2_2=int(input("\n[1] Exportar reporte en formato CSV\n[2] Exportar reporte en formato MsExcel\n[3] No exportar \n Elija una opcion:"))
                         if opcion2_2_2==1:
                             datos.to_csv('Reporte_por_autor.csv', index=False)
                             print('El archivo csv se nombro Reporte_por_autor.csv')
@@ -246,7 +246,7 @@ while True:
                         informacion=mi_cursor.fetchall()
                         datos=pd.DataFrame(informacion,columns=['ID','TITULO','AUTOR','GENERO','ANIO_PUBLICACION','ISBN','FECHA_ADQUISICION','ID_GENERO','ID_AUTOR'])
                         print(datos)
-                        opcion2_2_3=int(input("[1]Exportar reporte en formato CSV\n[2]Exportar reporte en formato MsExcel\n[3]No exportar nada\n Elija una opcion:"))
+                        opcion2_2_3=int(input("\n[1] Exportar reporte en formato CSV\n[2] Exportar reporte en formato MsExcel\n[3] No exportar\n Elija una opcion:"))
                         if opcion2_2_3==1:
                             datos.to_csv('Reporte_por_genero.csv', index=False)
                             print('El archivo csv se nombro Reporte_por_genero.csv')
@@ -259,17 +259,27 @@ while True:
                             break
 
                     if opcion2_2==4:
-                        print(f'{"="*60}')
-                        print(biblioteca_existente['ID','ANIO_PUBLICACION'])
-                        print(f'{"="*60}')
-                        ANIO_PUBLICACION=input("Elija una opcion para obtener todos los datos del año de publicacion: ")
                         conn=sqlite3.connect('biblioteca.db')
                         mi_cursor=conn.cursor()
-                        mi_cursor.execute("SELECT*FROM BIBLOTECA WHERE = ANIO_PUBLICACION",ANIO_PUBLICACION)
+                        mi_cursor.execute("SELECT ID,ANIO_PUBLICACION FROM BIBLIOTECA")
                         informacion=mi_cursor.fetchall()
-                        datos=pd.DataFrame(informacion,columns=['ID','TITULO','AUTOR','GENERO','ANIO_PUBLICACION','ISBN','FECHA_ADQUISICION','ID_GENERO','ID_AUTOR'])
+                        datos=pd.DataFrame(informacion,columns=['ID','AÑO DE PUBLICACION'])
+                        print(f'{"="*70}')
                         print(datos)
-                        opcion2_2_4=int(input("[1]Exportar reporte en formato CSV\n[2]Exportar reporte en formato MsExcel\n[3]No exportar nada\n Elija una opcion:"))
+                        print(f'{"="*70}')
+                        
+                        conn=sqlite3.connect('biblioteca.db')
+                        mi_cursor=conn.cursor()
+                        mi_cursor.execute("SELECT * FROM BIBLIOTECA")
+                        informacion=mi_cursor.fetchall()
+                        datos=pd.DataFrame(informacion,columns={'ID':[],'TITULO':[],'AUTOR':[],'GENERO':[],'ANIO_PUBLICACION':[],'ISBN':[],'FECHA_ADQUISICION':[],'ID_GENERO':[],'ID_AUTOR':[]})
+                        ANIO_PUBLICACION = int(input("Elija el Año de publiacacion para obtener informacion de consulta\nEscriba X para regresar al menu: "))
+                        if ANIO_PUBLICACION == "X":
+                            break
+                        else:
+                            consulta = datos.loc[datos["ANIO_PUBLICACION"].isin([ANIO_PUBLICACION])]
+                            print(consulta)
+                        opcion2_2_4=int(input("\n[1] Exportar reporte en formato CSV\n[2] Exportar reporte en formato MsExcel\n[3] No exportar \n Elija una opcion:"))
                         if opcion2_2_4==1:
                             datos.to_csv('Reporte_anio_publicacion.csv', index=False)
                             print('El archivo csv se nombro Reporte_anio_publicacion.csv')
@@ -371,4 +381,5 @@ while True:
         genero_id_encontrados.to_csv('genero_id.csv')
         autor_id_existentes.to_csv('autor_id.csv')
         conn.close()
-        romper
+        break
+
